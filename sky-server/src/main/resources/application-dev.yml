@@ -6,3 +6,9 @@ sky:
     database: sky_take_out
     username: root
     password: 123456
+
+  alioss:
+    endpoint: localhost:8080
+    access-key-secret: 123456
+    access-key-id: 1
+    bucket-name: files

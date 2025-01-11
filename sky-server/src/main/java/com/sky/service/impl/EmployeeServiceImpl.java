@@ -1,14 +1,20 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
+import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.BeanUtils;
@@ -17,6 +23,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -43,9 +54,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
         }
 
-        // 密码比对
+
+
         // 进行md5加密，然后再进行比对
-        password = DigestUtils.md5DigestAsHex(password.getBytes());
+//        password = DigestUtils.md5DigestAsHex(password.getBytes());
+
+        // 密码比对
         if (!password.equals(employee.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
@@ -67,8 +81,46 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 对象属性拷贝
         BeanUtils.copyProperties(employeeDTO, employee);
         employee.setStatus(StatusConstant.ENABLE);
-//        employee.setCreateTime();
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
+        // TODO 读取登录用户，动态获取
+        employee.setCreateUser(BaseContext.getCurrentId());
+        employee.setUpdateUser(BaseContext.getCurrentId());
 
+        employeeMapper.insert(employee);
     }
 
+    @Override
+    public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+        long total = page.getTotal();
+        List<Employee> records = page.getResult();
+        return new PageResult(total, records);
+    }
+
+    @Override
+    public void setStatus(long id, int status) {
+        Employee employee = new Employee();
+        employee.setId(id);
+        employee.setStatus(status);
+        employeeMapper.update(employee);
+    }
+
+    @Override
+    public Employee getById(long id) {
+        Employee employee = employeeMapper.getById(id);
+        employee.setPassword("******");
+        return employee;
+    }
+
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.update(employee);
+    }
 }

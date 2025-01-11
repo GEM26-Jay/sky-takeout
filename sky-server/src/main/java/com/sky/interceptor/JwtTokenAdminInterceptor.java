@@ -1,6 +1,7 @@
 package com.sky.interceptor;
 
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.context.BaseContext;
 import com.sky.properties.JwtProperties;
 import com.sky.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -27,10 +28,11 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
      *
      * @param request
      * @param response
-     * @param handler
+     * @param handler: 目标处理器对象
      * @return
      * @throws Exception
      */
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //判断当前拦截到的是Controller的方法还是其他资源
         if (!(handler instanceof HandlerMethod)) {
@@ -46,13 +48,26 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
-            log.info("当前员工id：", empId);
+            log.info("当前员工id：{}", empId);
             //3、通过，放行
+            BaseContext.setCurrentId(empId);
+
             return true;
         } catch (Exception ex) {
             //4、不通过，响应401状态码
             response.setStatus(401);
             return false;
         }
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        /**
+         * 连接结束之后清理ThreadLocal的内容，避免内存泄露
+         */
+        if (BaseContext.getCurrentId() != null) {
+            BaseContext.removeCurrentId();
+        }
+
     }
 }
