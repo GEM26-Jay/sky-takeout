@@ -15,6 +15,7 @@ import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
+import com.sky.utils.LocalFileUtil;
 import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,25 +92,24 @@ public class DishServiceImpl implements DishService {
         //判断当前菜品是否能够删除--起售中
         ArrayList<Dish> dishes = dishMapper.getGroupByIds(idArr);
         StringBuilder statusSb = new StringBuilder();
-        dishes.forEach((dish)->{
+        for (Dish dish : dishes) {
             if (dish.getStatus() == StatusConstant.ENABLE){
                 statusSb.append(dish.getName()).append(',');
             }
-        });
+        }
 
         if (!statusSb.isEmpty()) {
             throw new DeletionNotAllowedException(statusSb.append("正在启用中，无法删除").toString());
         }
 
-        //ToDo 测试
         //判断是否被套餐关联
-        ArrayList<SetmealDish> setmealDishes = setMealDishMapper.getGroupByDishIds(idArr);
+        List<SetmealDish> setmealDishes = setMealDishMapper.getGroupByDishIds(idArr);
 
         if (setmealDishes != null && !setmealDishes.isEmpty()) {
             StringBuilder setSb = new StringBuilder();
-            setmealDishes.forEach((setmealDish)->{
-                setSb.append("菜品 {} 正在套餐 {} 中， 无法删除\n".formatted(setmealDish.getDishName(), setmealDish.getSetName()));
-            });
+            for (SetmealDish setDish : setmealDishes) {
+                setSb.append("菜品\"").append(setDish.getDishName()).append("\"正在套餐\"").append(setDish.getSetName()).append("\"中售卖，无法删除!\r\n");
+            }
             throw new DeletionNotAllowedException(setSb.toString());
         }
 
@@ -147,7 +147,7 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<Dish> getByType(Long typeId) {
+    public List<Dish> getByTypeId(Long typeId) {
         List<Dish> dishes = dishMapper.getByTypeId(typeId);
         return dishes;
     }

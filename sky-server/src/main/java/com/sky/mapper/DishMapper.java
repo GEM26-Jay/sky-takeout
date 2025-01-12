@@ -19,19 +19,18 @@ public interface DishMapper {
     @AutoFill(OperationType.INSERT)
     void insert(Dish dish);
 
-
     Page<DishVO> selectByPage(DishPageQueryDTO dishPageQueryDTO);
 
     ArrayList<Dish> getGroupByIds(ArrayList<Long> idArr);
 
     void deleteGroupByDishIds(ArrayList<Long> idArr);
 
+    @AutoFill(OperationType.UPDATE)
     void update(Dish dish);
 
     @Select("select * from dish where id=#{id}")
     Dish getById(Long id);
 
-    @Select("select * from dish where category_id=#{typeId}")
     List<Dish> getByTypeId(Long typeId);
 
 }

@@ -49,8 +49,29 @@ public class LocalFileUtil {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("文件保存失败: " + e.getMessage());
-
         }
+    }
+
+    public void deleteByURL(String objectName){
+        String fileName = objectName.substring(objectName.lastIndexOf("/")+1);
+        String basePath = System.getProperty("user.dir");
+        String fullPath = basePath+File.separator+bucketName+File.separator+fileName;
+
+        // 创建文件对象
+        File file = new File(fullPath);
+
+        // 检查文件是否存在
+        if (file.exists()) {
+            // 尝试删除文件
+            if (file.delete()) {
+                System.out.println("文件已成功删除：" + fullPath);
+            } else {
+                System.out.println("文件删除失败：" + fullPath);
+            }
+        } else {
+            System.out.println("文件不存在：" + fullPath);
+        }
+
     }
 
 }

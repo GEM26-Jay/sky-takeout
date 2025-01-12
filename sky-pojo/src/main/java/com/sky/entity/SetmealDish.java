@@ -34,8 +34,8 @@ public class SetmealDish implements Serializable {
     private String dishName;
 
     //菜品原价
-    private BigDecimal price;
+    private BigDecimal dishPrice;
 
     //份数
-    private Integer copies;
+    private Integer dishCopies;
 }

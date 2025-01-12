@@ -6,6 +6,7 @@ import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.utils.LocalFileUtil;
 import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,7 +61,7 @@ public class DishController {
     @ApiOperation("根据分类查询菜品")
     @GetMapping("/list")
     public Result<List<Dish>> getDishList(Long typeId){
-        List<Dish> dishes = dishService.getByType(typeId);
+        List<Dish> dishes = dishService.getByTypeId(typeId);
         return Result.success(dishes);
     }
 

@@ -22,5 +22,6 @@ public interface DishService {
 
     void updateStatus(Long id, int status);
 
-    List<Dish> getByType(Long typeId);
+    List<Dish> getByTypeId(Long typeId);
+
 }

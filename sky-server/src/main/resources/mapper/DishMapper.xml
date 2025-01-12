@@ -56,4 +56,11 @@
         </where>
     </select>
 
+    <select id="getByTypeId" resultType="com.sky.entity.Dish">
+        select * from dish
+        <where>
+            <if test="typeId!=null">category_id=#{typeId}</if>
+        </where>
+    </select>
+
 </mapper>
