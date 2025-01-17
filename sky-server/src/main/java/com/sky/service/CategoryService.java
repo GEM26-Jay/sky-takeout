@@ -6,6 +6,7 @@ import com.sky.entity.Category;
 import com.sky.result.PageResult;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface CategoryService {
     PageResult getPage(CategoryPageQueryDTO categoryPageQueryDTO);
@@ -16,7 +17,8 @@ public interface CategoryService {
 
     void insert(CategoryDTO categoryDTO);
 
-    ArrayList<Category> selectByType(int i);
+    ArrayList<Category> selectByType(Integer i);
 
     void update(CategoryDTO categoryDTO);
+
 }

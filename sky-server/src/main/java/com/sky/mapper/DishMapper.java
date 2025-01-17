@@ -33,4 +33,8 @@ public interface DishMapper {
 
     List<Dish> getByTypeId(Long typeId);
 
+    List<Dish> getByDishInfo(Dish dishInfo);
+
+    List<Dish> getByIds(ArrayList<Long> dishIds);
+
 }

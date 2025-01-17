@@ -5,14 +5,19 @@ import com.github.pagehelper.PageHelper;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Dish;
+import com.sky.entity.DishFlavor;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.exception.BaseException;
+import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetMealMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetMealService;
 import com.sky.utils.LocalFileUtil;
+import com.sky.vo.DishItemVO;
+import com.sky.vo.DishVO;
 import com.sky.vo.SetmealVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,8 @@ public class SetMealServiceImpl implements SetMealService {
     SetMealMapper setMealMapper;
     @Autowired
     SetmealDishMapper setmealDishMapper;
+    @Autowired
+    DishMapper dishMapper;
 
     @Override
     public void updateSetMeal(SetmealDTO setmealDTO) {
@@ -116,11 +123,27 @@ public class SetMealServiceImpl implements SetMealService {
         // 查询套餐表数据
         Setmeal setmeal = setMealMapper.selectById(id);
         // 查询套餐-菜品关联表数据
-        ArrayList<SetmealDish> setmealDishes = setmealDishMapper.selectBySetId(id);
+        List<SetmealDish> setmealDishes = setmealDishMapper.selectBySetId(id);
 
         BeanUtils.copyProperties(setmeal, setmealVO);
         setmealVO.setSetmealDishes(setmealDishes);
 
         return setmealVO;
     }
+
+    @Override
+    public List<Setmeal> getBySetMeal(Setmeal setmeal) {
+        List<Setmeal> setMealList = setMealMapper.getBySetMealInfo(setmeal);
+
+        return setMealList;
+
+    }
+
+    @Override
+    public List<DishItemVO> getDishItemBySetId(Long id) {
+        List<DishItemVO> dishItemVOs = setmealDishMapper.selectDishVOBySetId(id);
+        return dishItemVOs;
+    }
+
+
 }

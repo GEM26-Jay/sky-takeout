@@ -3,6 +3,7 @@ package com.sky.mapper;
 import com.sky.annotation.AutoFill;
 import com.sky.entity.SetmealDish;
 import com.sky.enumeration.OperationType;
+import com.sky.vo.DishItemVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -16,11 +17,13 @@ public interface SetmealDishMapper {
 
     void insertGroup(List<SetmealDish> dishList);
 
-    @Select("select * from setmeal_dish where set_id=#{setId}")
-    ArrayList<SetmealDish> selectBySetId(Long setId);
+    List<DishItemVO> selectDishVOBySetId(Long setId);
 
     void deleteBySetId(Long setId);
 
     void deleteGroupBySetIds(List<Long> setIds);
+
+    @Select("select * from setmeal_dish where set_id=#{setId}")
+    List<SetmealDish> selectBySetId(Long setId);
 
 }

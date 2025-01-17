@@ -18,3 +18,7 @@ sky:
     port: 6379
     password: 123456
     database: 1
+
+  wx:
+    appid: wxf59e1834799d563b
+    secret: 3eaf64146458c69be392d7b4a16c18b0

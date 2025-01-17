@@ -28,4 +28,7 @@ public interface SetMealMapper {
     List<Setmeal> selectByIds(List<Long> setMealIds);
 
     void deleteGroupByIds(List<Long> setMealIds);
+
+    List<Setmeal> getBySetMealInfo(Setmeal setmeal);
+
 }

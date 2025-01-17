@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -62,7 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ArrayList<Category> selectByType(int i) {
+    public ArrayList<Category> selectByType(Integer i) {
         ArrayList<Category> arr = categoryMapper.selectByType(i);
         return arr;
     }
@@ -73,4 +74,5 @@ public class CategoryServiceImpl implements CategoryService {
         BeanUtils.copyProperties(categoryDTO, category);
         categoryMapper.update(category);
     }
+
 }

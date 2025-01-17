@@ -44,7 +44,7 @@ public interface CategoryMapper {
      * @param type
      * @return
      */
-    ArrayList<Category> selectByType(int type);
+    ArrayList<Category> selectByType(Integer type);
 
     /**
      * 插入数据

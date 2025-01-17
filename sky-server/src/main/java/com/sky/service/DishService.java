@@ -24,4 +24,6 @@ public interface DishService {
 
     List<Dish> getByTypeId(Long typeId);
 
+    List<DishVO> getByDish(Dish dish);
+
 }
